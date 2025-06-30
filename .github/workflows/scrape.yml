@@ -1,0 +1,24 @@
+name: Daily Job Scraper
+on:
+  schedule:
+    - cron: '0 8 * * *'  # 每天UTC时间8点运行
+  workflow_dispatch:     # 手动运行开关
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Install dependencies
+      run: pip install requests beautifulsoup4
+    - name: Run scraper
+      run: python remote_job_scraper.py
+    - name: Upload results
+      uses: actions/upload-artifact@v3
+      with:
+        name: jobs
+        path: remote_jobs_*.json
